@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.Font?>
+
+<VBox spacing="15.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.example.controller.AddTrackController">
+    <padding>
+        <Insets bottom="20.0" left="20.0" right="20.0" top="20.0" />
+    </padding>
+    <Label text="Add New Track">
+        <font>
+            <Font name="System Bold" size="18.0" />
+        </font>
+    </Label>
+    
+    <GridPane hgap="10.0" vgap="15.0">
+        <columnConstraints>
+            <ColumnConstraints minWidth="90.0" />
+            <ColumnConstraints hgrow="ALWAYS" />
+        </columnConstraints>
+
+        <Label text="Name:" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+        <TextField fx:id="txtTrackName" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+        
+        <Label text="Composer:" GridPane.columnIndex="0" GridPane.rowIndex="1" />
+        <TextField fx:id="txtComposer" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+        
+        <Label text="Milliseconds:" GridPane.columnIndex="0" GridPane.rowIndex="2" />
+        <TextField fx:id="txtMilliseconds" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+        
+        <Label text="Bytes:" GridPane.columnIndex="0" GridPane.rowIndex="3" />
+        <TextField fx:id="txtBytes" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+        
+        <Label text="Unit Price:" GridPane.columnIndex="0" GridPane.rowIndex="4" />
+        <TextField fx:id="txtUnitPrice" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+        
+        <Label text="Album:" GridPane.columnIndex="0" GridPane.rowIndex="5" />
+        <ComboBox fx:id="cmbAlbum" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+        
+        <Label text="Genre:" GridPane.columnIndex="0" GridPane.rowIndex="6" />
+        <ComboBox fx:id="cmbGenre" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+        
+        <Label text="Media Type:" GridPane.columnIndex="0" GridPane.rowIndex="7" />
+        <ComboBox fx:id="cmbMediaType" maxWidth="1.7976931348623157E308" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+    </GridPane>
+    
+    <HBox alignment="CENTER_RIGHT" spacing="10.0">
+        <VBox.margin>
+            <Insets top="10.0" />
+        </VBox.margin>
+        <Button fx:id="btnCancel" text="Cancel" />
+        <Button fx:id="btnSaveTrack" text="Save Track" style="-fx-background-color: #27ae60; -fx-text-fill: white; -fx-font-weight: bold;" />
+    </HBox>
+</VBox>
