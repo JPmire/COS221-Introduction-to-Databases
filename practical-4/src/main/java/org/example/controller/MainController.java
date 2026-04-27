@@ -32,7 +32,6 @@ import java.util.Optional;
 
 public class MainController {
 
-    // 1. Link the FXML elements (Make sure these perfectly match your fx:id's in Scene Builder)
     @FXML private TextField txtEmployeeFilter;
     @FXML private TableView<Employee> tblEmployee;
     @FXML private TableColumn<Employee, String> colEmpFirstName;
@@ -95,7 +94,6 @@ public class MainController {
     @FXML private TableColumn<Track, Integer> colRecAlbum;
     @FXML private TableColumn<Track, Integer> colRecGenre;
 
-    // 2. Instantiate your DAO
     private EmployeeDAO employeeDAO = new EmployeeDAO();
     private TrackDAO trackDAO = new TrackDAO();
     private GenreDAO genreDAO = new GenreDAO();
@@ -104,10 +102,8 @@ public class MainController {
     
     private Customer selectedCustomer;
 
-    // 3. The initialize() method runs automatically when the app starts
     @FXML
     public void initialize() {
-        // Tell each column exactly which variable to look for in the Employee.java class
         colEmpFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         colEmpLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         colEmpTitle.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -137,25 +133,21 @@ public class MainController {
         colGenreName.setCellValueFactory(new PropertyValueFactory<>("genreName"));
         colGenreRevenue.setCellValueFactory(new PropertyValueFactory<>("totalRevenue"));
 
-        // Setup Customer columns
         colCustFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         colCustLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         colCustEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colCustPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
         colCustCountry.setCellValueFactory(new PropertyValueFactory<>("country"));
 
-        // Setup Inactive Customer columns
         colInactCustFirstName.setCellValueFactory(new PropertyValueFactory<>("firstName"));
         colInactCustLastName.setCellValueFactory(new PropertyValueFactory<>("lastName"));
         colInactCustEmail.setCellValueFactory(new PropertyValueFactory<>("email"));
         colInactCustPhone.setCellValueFactory(new PropertyValueFactory<>("phone"));
 
-        // Setup Customer Recommendations columns
         colRecTrackName.setCellValueFactory(new PropertyValueFactory<>("name"));
         colRecAlbum.setCellValueFactory(new PropertyValueFactory<>("albumId"));
         colRecGenre.setCellValueFactory(new PropertyValueFactory<>("genreId"));
 
-        // Setup Customer ComboBox listener
         if (cmbCustomerSelect != null) {
             cmbCustomerSelect.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
                 if (newVal != null) {
@@ -166,16 +158,13 @@ public class MainController {
             });
         }
 
-        // Load the data into the table
         refreshEmployeeTable();
         refreshTracksTable();
         refreshCustomerTable();
         refreshInactiveCustomerTable();
         
-        // Task 4.3: Add New Track button click event
         btnAddTrack.setOnAction(event -> openAddTrackPopup());
 
-        // Task 4.4: Genre Revenue Report Tab event
         if (tabReport != null) {
             tabReport.setOnSelectionChanged(event -> {
                 if (tabReport.isSelected()) {
@@ -184,7 +173,6 @@ public class MainController {
             });
         }
 
-        // Setup Customer CRUD actions
         btnCustCreate.setOnAction(e -> createCustomer());
         btnCustUpdate.setOnAction(e -> updateCustomer());
         btnCustDelete.setOnAction(e -> deleteCustomer());
@@ -241,72 +229,50 @@ public class MainController {
 
     private void openAddTrackPopup() {
         try {
-            // Load the FXML for the popup. This will AUTOMATICALLY instantiate your AddTrackController!
             FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/AddTrackPopup.fxml"));
             Parent root = loader.load();
 
-            // Create a new Stage (window) for the popup
             Stage popupStage = new Stage();
             popupStage.setTitle("Add New Track");
             popupStage.setScene(new Scene(root));
             
-            // Set modality so the user can't click the main window while the popup is open
             popupStage.initModality(Modality.APPLICATION_MODAL);
 
-            // Show the popup and pause the main thread until the popup is closed
             popupStage.showAndWait();
-
-            // When the code reaches here, the popup was just closed.
-            // You should refresh your tracks table here!
-            refreshTracksTable(); 
+            refreshTracksTable();
 
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // 4. The method that actually fetches data from the DAO and puts it in the table
     public void refreshEmployeeTable() {
-        // Get the standard Java List from your DAO
         List<Employee> employeeList = employeeDAO.getAll();
-
-        // Convert it to a JavaFX ObservableList (which is required for TableViews)
         ObservableList<Employee> observableData = FXCollections.observableArrayList(employeeList);
-
-        // Wrap the ObservableList in a FilteredList (initially display all data)
         FilteredList<Employee> filteredData = new FilteredList<>(observableData, b -> true);
 
-        // Set the filter Predicate whenever the filter changes
         txtEmployeeFilter.textProperty().addListener((observable, oldValue, newValue) -> {
             filteredData.setPredicate(employee -> {
-                // If filter text is empty, display all employees.
                 if (newValue == null || newValue.isEmpty()) {
                     return true;
                 }
 
-                // Compare first name, last name and city of every employee with filter text.
                 String lowerCaseFilter = newValue.toLowerCase();
 
                 if (employee.getFirstName() != null && employee.getFirstName().toLowerCase().contains(lowerCaseFilter)) {
-                    return true; // Filter matches first name.
+                    return true;
                 } else if (employee.getLastName() != null && employee.getLastName().toLowerCase().contains(lowerCaseFilter)) {
-                    return true; // Filter matches last name.
+                    return true;
                 } else if (employee.getCity() != null && employee.getCity().toLowerCase().contains(lowerCaseFilter)) {
-                    return true; // Filter matches city.
+                    return true;
                 }
                 
-                return false; // Does not match.
+                return false;
             });
         });
 
-        // Wrap the FilteredList in a SortedList
         SortedList<Employee> sortedData = new SortedList<>(filteredData);
-
-        // Bind the SortedList comparator to the TableView comparator
-        // Otherwise, sorting the TableView would have no effect
         sortedData.comparatorProperty().bind(tblEmployee.comparatorProperty());
-
-        // Add sorted (and filtered) data to the table
         tblEmployee.setItems(sortedData);
     }
 
@@ -326,7 +292,6 @@ public class MainController {
         List<Customer> customers = customerDAO.getAll();
         tblCustomers.setItems(FXCollections.observableArrayList(customers));
         
-        // Also update the combobox in the recommendations tab
         if (cmbCustomerSelect != null) {
             Customer selected = cmbCustomerSelect.getValue();
             cmbCustomerSelect.setItems(FXCollections.observableArrayList(customers));

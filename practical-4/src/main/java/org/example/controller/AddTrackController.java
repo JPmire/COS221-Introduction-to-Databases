@@ -30,7 +30,6 @@ public class AddTrackController {
 
     @FXML
     private void initialize() {
-        // Load data from DAOs
         AlbumDAO albumDAO = new AlbumDAO();
         GenreDAO genreDAO = new GenreDAO();
         MediaTypeDAO mediaTypeDAO = new MediaTypeDAO();
@@ -39,7 +38,6 @@ public class AddTrackController {
         cmbGenre.setItems(FXCollections.observableArrayList(genreDAO.getAll()));
         cmbMediaType.setItems(FXCollections.observableArrayList(mediaTypeDAO.getAll()));
 
-        // Set actions
         btnSaveTrack.setOnAction(event -> addTrack());
         btnCancel.setOnAction(event -> closeWindow());
     }
