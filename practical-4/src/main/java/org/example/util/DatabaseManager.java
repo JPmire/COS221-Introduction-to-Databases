@@ -14,7 +14,18 @@ public class DatabaseManager {
     private static final Map<String, String> envVars = new HashMap<>();
 
     static {
-        loadEnvFile(".env");
+        String[] candidates = {
+            ".env",
+            "practical-4/.env",
+            System.getProperty("user.dir") + "/.env",
+            System.getProperty("user.dir") + "/practical-4/.env"
+        };
+        for (String path : candidates) {
+            if (new java.io.File(path).exists()) {
+                loadEnvFile(path);
+                break;
+            }
+        }
     }
 
     private static void loadEnvFile(String path) {
